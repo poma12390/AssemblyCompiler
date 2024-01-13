@@ -25,7 +25,7 @@ def temp_files():
     os.remove(target)
 
 
-@pytest.mark.golden_test("golden/prob2.yml")
+@pytest.mark.golden_test("golden/*.yml")
 def test_translator_and_machine(golden, caplog, temp_files):
     caplog.set_level(logging.INFO)
 

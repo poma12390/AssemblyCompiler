@@ -62,7 +62,7 @@ out_stdout:
 out_log: |
   INFO    machine:decode_and_execute_instruction 
 
-  INFO    machine:__print__     Command: cla  | AC 0       | IP: 8    | AR: 7    | PS: 00011 | DR: 10      | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: cla          | 
+  INFO    machine:__print__     Command: cla  | AC 0       | IP: 8    | AR: 7    | PS: 00011 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: cla          | 
   INFO    machine:decode_and_execute_instruction 
 
   INFO    machine:__print__     Command: load | AC 2       | IP: 9    | AR: 2    | PS: 00000 | DR: 2       | SP : 2045 | mem[AR] 2       | mem[SP] : 0   | CR: load 2       | 
