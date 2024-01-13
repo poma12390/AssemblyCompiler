@@ -235,8 +235,6 @@ class ControlUnit:
             )
         return res
 
-    def __tick(self):
-        self._tick += 1
 
     def input_instruction(self):
         data = self.input_data[self.input_pointer][1]
