@@ -137,7 +137,7 @@ class ControlUnit:
         self.limit = limit
         self.instr_counter = 0  # счетчик чтобы машина не работала бесконечно
 
-        self.sig_latch_reg("IP", start_address)
+        self.set_reg("IP", start_address)
         self._tick = 0
         self.command = ""
         self._map_instruction()
@@ -211,34 +211,33 @@ class ControlUnit:
         return self.data_path.get_reg(reg)
 
     # Установка значения регистра в DataPath.
-    def sig_latch_reg(self, reg, val):
+    def set_reg(self, reg, val):
         self.data_path.set_reg(reg, val)
 
-    def sig_write(self):
+    def write_output(self):
         self.data_path.memory[self.data_path.registers["AR"]] = {"value": self.data_path.registers["DR"]}
         if self.data_path.registers["AR"] == OUTPUT_MAP:
             self.data_path.output_buffer.append(self.data_path.registers["DR"])
             logger.info("OUTPUT " + str(self.data_path.output_buffer[-1]))
 
-    def sig_read(self):
+    def read_output(self):
         self.data_path.registers["DR"] = self.data_path.memory[self.data_path.registers["AR"]]["value"]
 
     def calc(self, left, right, op, change_flags=False):
         res = self.data_path.alu.calc(left, right, op, change_flags)
         if change_flags:
-            self.sig_latch_reg("PS", self.get_reg("PS") ^ ((self.get_reg("PS") ^ self.data_path.alu.C) & 1))
-            self.sig_latch_reg(
+            self.set_reg("PS", self.get_reg("PS") ^ ((self.get_reg("PS") ^ self.data_path.alu.C) & 1))
+            self.set_reg(
                 "PS", self.get_reg("PS") ^ ((self.get_reg("PS") ^ (self.data_path.alu.Z << 1)) & (1 << 1))
             )
-            self.sig_latch_reg(
+            self.set_reg(
                 "PS", self.get_reg("PS") ^ ((self.get_reg("PS") ^ (self.data_path.alu.N << 2)) & (1 << 2))
             )
         return res
 
-
     def input_instruction(self):
         data = self.input_data[self.input_pointer][1]
-        self.sig_latch_reg("PS", self.get_reg("PS") | 8)  # 1 -> PS[3]
+        self.set_reg("PS", self.get_reg("PS") | 8)  # 1 -> PS[3]
         logger.info("INPUT " + str(data))
         self.data_path.memory[INPUT_MAP] = {"value": data}  # data -> mem[IO], загрузили символ
         self.input_pointer += 1
@@ -264,63 +263,63 @@ class ControlUnit:
             print("Limit exceeded!")
 
     def process_interrupt(self):
-        self.sig_latch_reg("PS", self.get_reg("PS") & ~(1 << 3))
-        self.sig_latch_reg("DR", self.calc(0, self.get_reg("PS"), "add"))
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
+        self.set_reg("PS", self.get_reg("PS") & ~(1 << 3))
+        self.set_reg("DR", self.calc(0, self.get_reg("PS"), "add"))
+        self.set_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
         self.tick()  # 0 -> PS[3], IP -> DR, SP -> AR
 
-        self.sig_write()
+        self.write_output()
         self.tick()  # DR -> mem[SP]
 
-        self.sig_latch_reg("SP", self.calc(self.get_reg("SP"), 1, "sub"))
-        self.sig_latch_reg("DR", self.calc(0, self.get_reg("IP"), "add"))
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
+        self.set_reg("SP", self.calc(self.get_reg("SP"), 1, "sub"))
+        self.set_reg("DR", self.calc(0, self.get_reg("IP"), "add"))
+        self.set_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
         self.tick()  # SP - 1 -> SP,  IP -> DR, SP -> AR
 
-        self.sig_write()
+        self.write_output()
         self.tick()  # DR -> mem[SP]
 
-        self.sig_latch_reg("SP", self.calc(self.get_reg("SP"), 1, "sub"))
-        self.sig_latch_reg("AR", INT_VEC)  # адрес вектора прерываний
-        self.sig_read()
+        self.set_reg("SP", self.calc(self.get_reg("SP"), 1, "sub"))
+        self.set_reg("AR", INT_VEC)  # адрес вектора прерываний
+        self.read_output()
         self.tick()  # SP - 1 -> SP, 0 -> AR, mem[AR] -> DR
 
-        self.sig_latch_reg("IP", self.calc(0, self.get_reg("DR"), "add"))
+        self.set_reg("IP", self.calc(0, self.get_reg("DR"), "add"))
         self.tick()  # DR -> IP
 
         self.command_cycle()  # выполняем подпрограмму для прерывания
 
-        self.sig_latch_reg("SP", self.calc(1, self.get_reg("SP"), "add"))
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
-        self.sig_read()
-        self.sig_latch_reg("IP", self.calc(0, self.get_reg("DR"), "add"))
+        self.set_reg("SP", self.calc(1, self.get_reg("SP"), "add"))
+        self.set_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
+        self.read_output()
+        self.set_reg("IP", self.calc(0, self.get_reg("DR"), "add"))
         self.tick()  # SP + 1 -> SP, SP -> AR, mem[AR] -> DR, DR -> IP
 
-        self.sig_latch_reg("SP", self.calc(1, self.get_reg("SP"), "add"))
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
-        self.sig_read()
+        self.set_reg("SP", self.calc(1, self.get_reg("SP"), "add"))
+        self.set_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
+        self.read_output()
 
         new_int = (self.get_reg("PS") >> 3) & 1
-        self.sig_latch_reg("PS", self.calc(0, self.get_reg("DR"), "add") | new_int * 8)
+        self.set_reg("PS", self.calc(0, self.get_reg("DR"), "add") | new_int * 8)
         self.tick()  # SP + 1 -> SP, SP -> AR, mem[AR] -> DR, DR -> PS
 
         if (self.get_reg("PS") >> 3) & 1 == 1 and (self.get_reg("PS") >> 4) & 1 == 1:
             self.process_interrupt()
 
     def addrFetch(self):
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("DR"), "add"))
-        self.sig_read()
+        self.set_reg("AR", self.calc(0, self.get_reg("DR"), "add"))
+        self.read_output()
         self.tick()  # CR[operand] -> DR, DR -> AR, mem[AR] -> DR
 
     def opFetch(self):
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("DR"), "add"))
-        self.sig_read()
+        self.set_reg("AR", self.calc(0, self.get_reg("DR"), "add"))
+        self.read_output()
         self.tick()  # CR[operand] -> DR, DR -> AR, mem[AR] -> DR
 
     def decode_and_execute_instruction(self):
-        self.sig_latch_reg("AR", self.calc(0, self.get_reg("IP"), "add"))  # IP -> AR
-        self.sig_latch_reg("IP", self.calc(1, self.get_reg("IP"), "add"))  # IP + 1 -> IP
-        self.sig_latch_reg("CR", self.data_path.memory[self.get_reg("AR")])
+        self.set_reg("AR", self.calc(0, self.get_reg("IP"), "add"))  # IP -> AR
+        self.set_reg("IP", self.calc(1, self.get_reg("IP"), "add"))  # IP + 1 -> IP
+        self.set_reg("CR", self.data_path.memory[self.get_reg("AR")])
         instr = self.get_reg("CR")
 
         opcode = instr["opcode"]
@@ -333,7 +332,7 @@ class ControlUnit:
         # адресная команда
         if "operand" in instr.keys():
             # в DR лежит адрес операнда или адрес адреса операнда
-            self.sig_latch_reg("DR", int(self.get_reg("CR")["operand"]))  # CR -> alu -> DR (operand only)
+            self.set_reg("DR", int(self.get_reg("CR")["operand"]))  # CR -> alu -> DR (operand only)
 
             # цикл выборки адреса
             if instr["address"]:
@@ -343,12 +342,12 @@ class ControlUnit:
             self.opFetch()
 
             if opcode == "load":
-                self.sig_latch_reg("AC", self.calc(0, self.get_reg("DR"), "add", True))
+                self.set_reg("AC", self.calc(0, self.get_reg("DR"), "add", True))
                 self.tick()  # DR -> AC
 
             elif opcode == "store":
-                self.sig_latch_reg("DR", self.calc(0, self.get_reg("AC"), "add"))
-                self.sig_write()
+                self.set_reg("DR", self.calc(0, self.get_reg("AC"), "add"))
+                self.write_output()
                 self.tick()  # AC -> DR, DR -> mem[AR]
 
             elif opcode in branch_commands:
@@ -361,13 +360,13 @@ class ControlUnit:
                 elif flag is not None:
                     condition = eval("self.data_path.alu." + flag[0])
                 if condition:
-                    self.sig_latch_reg("IP", self.calc(0, self.get_reg("AR"), "add"))
+                    self.set_reg("IP", self.calc(0, self.get_reg("AR"), "add"))
                     self.tick()  # AR -> IP
                 else:
                     self.tick()  # NOP
             else:
                 # арифметическая операция
-                self.sig_latch_reg("AC", self.calc(self.get_reg("AC"), self.get_reg("DR"), opcode, True))
+                self.set_reg("AC", self.calc(self.get_reg("AC"), self.get_reg("DR"), opcode, True))
                 self.tick()
         # безадресная команда
         else:
@@ -378,32 +377,32 @@ class ControlUnit:
                 self.tick()  # return
                 return False
             elif opcode == "push":
-                self.sig_latch_reg("DR", self.calc(self.get_reg("AC"), 0, "add"))  # AC -> DR
-                self.sig_latch_reg("AR", self.calc(self.get_reg("SP"), 0, "add"))  # SP -> AR
-                self.sig_latch_reg("SP", self.calc(self.get_reg("SP"), 1, "sub"))  # SP - 1 -> SP
-                self.sig_write()
+                self.set_reg("DR", self.calc(self.get_reg("AC"), 0, "add"))  # AC -> DR
+                self.set_reg("AR", self.calc(self.get_reg("SP"), 0, "add"))  # SP -> AR
+                self.set_reg("SP", self.calc(self.get_reg("SP"), 1, "sub"))  # SP - 1 -> SP
+                self.write_output()
                 self.tick()  # AC -> DR, SP -> AR, SP - 1 -> SP, DR -> mem[SP]
             elif opcode == "pop":
-                self.sig_latch_reg("SP", self.calc(self.get_reg("SP"), 1, "add"))  # SP + 1 -> SP
-                self.sig_latch_reg("AR", self.calc(self.get_reg("SP"), 0, "add"))  # SP -> AR
-                self.sig_read()
-                self.sig_latch_reg("AC", self.calc(self.get_reg("DR"), 0, "add", True))  # DR -> AC
+                self.set_reg("SP", self.calc(self.get_reg("SP"), 1, "add"))  # SP + 1 -> SP
+                self.set_reg("AR", self.calc(self.get_reg("SP"), 0, "add"))  # SP -> AR
+                self.read_output()
+                self.set_reg("AC", self.calc(self.get_reg("DR"), 0, "add", True))  # DR -> AC
                 self.tick()  # SP + 1 -> SP, SP -> AR, mem[SP] -> DR, DR -> AC
 
             elif opcode == "di":
-                self.sig_latch_reg("PS", self.get_reg("PS") & ~(1 << 4))
+                self.set_reg("PS", self.get_reg("PS") & ~(1 << 4))
                 self.tick()  # 0 -> PS[4] interrupt block
             elif opcode == "ei":
-                self.sig_latch_reg("PS", self.get_reg("PS") | 16)
+                self.set_reg("PS", self.get_reg("PS") | 16)
                 self.tick()  # 1 -> PS[4] interrupt unlock
             elif opcode == "cla":
-                self.sig_latch_reg("AC", self.calc(self.get_reg("AC"), self.get_reg("AC"), "sub", True))
+                self.set_reg("AC", self.calc(self.get_reg("AC"), self.get_reg("AC"), "sub", True))
                 self.tick()  # 0 -> AC
             elif opcode == "nop":
                 self.tick()  # NOP
             else:
                 # унарная арифметическая операция
-                self.sig_latch_reg("AC", self.calc(self.get_reg("AC"), None, opcode, True))
+                self.set_reg("AC", self.calc(self.get_reg("AC"), None, opcode, True))
                 self.tick()
         logger.info("\n")
         self.__print__("")
