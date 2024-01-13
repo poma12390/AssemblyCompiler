@@ -1,0 +1,128 @@
+10 - 110000 - ei | Allow interrupt
+11 - A00003 - load 0003 | 0003 -> AC
+12 - F0000B - jmz 000B | GOTO 000B if Z == 1
+13 - 010000 - hlt | Stop
+14 - 0C0000 - push | AC -> -(SP)
+15 - A00004 - load #4 | #4 -> AC
+16 - 700002 - cmp 0002 | AC - 0002set flags
+17 - F10016 - jmnz 0016 | GOTO 0016 if Z == 0
+18 - A00003 - load 0003 | 0003 -> AC
+19 - 070000 - inc | AC + 1 -> AC
+20 - E00003 - store 0003 | AC -> 0003
+21 - C00017 - jmp 0017 | GOTO 0017
+22 - E00005 - store #5 | AC -> #5
+23 - 0A0000 - pop | (SP)+ -> AC
+24 - 0B0000 - iret | return
+19 - A0002B - load 002B | 002B -> AC
+20 - E00029 - store 0029 | AC -> 0029
+21 - A0002A - load 002A | 002A -> AC
+22 - 070000 - inc | AC + 1 -> AC
+23 - E0002A - store 002A | AC -> 002A
+24 - A0002A - load #2A | #2A -> AC
+25 - E00005 - store #5 | AC -> #5
+26 - A00029 - load 0029 | 0029 -> AC
+27 - 080000 - dec | AC - 1 -> AC
+28 - E00029 - store 0029 | AC -> 0029
+29 - F0002C - jmz #2C | GOTO #2C if Z == 1
+30 - C0002F - jmp 002F | GOTO 002F
+31 - 100000 - di | Prohibit interrupt
+32 - 0C0000 - push | AC -> -(SP)
+33 - A00086 - load 0086 | 0086 -> AC
+34 - 070000 - inc | AC + 1 -> AC
+35 - E00086 - store 0086 | AC -> 0086
+36 - A00004 - load #4 | #4 -> AC
+37 - 700002 - cmp 0002 | AC - 0002set flags
+38 - F10045 - jmnz 0045 | GOTO 0045 if Z == 0
+39 - A00003 - load 0003 | 0003 -> AC
+40 - 070000 - inc | AC + 1 -> AC
+41 - E00003 - store 0003 | AC -> 0003
+42 - C00049 - jmp 0049 | GOTO 0049
+43 - E00086 - store #86 | AC -> #86
+44 - A00085 - load #85 | #85 -> AC
+45 - 070000 - inc | AC + 1 -> AC
+46 - E00085 - store #85 | AC -> #85
+47 - 0A0000 - pop | (SP)+ -> AC
+48 - 110000 - ei | Allow interrupt
+49 - 0B0000 - iret | return
+100 - 110000 - ei | Allow interrupt
+101 - A00006 - load 0006 | 0006 -> AC
+102 - E0002B - store 002B | AC -> 002B
+103 - A00019 - load 0019 | 0019 -> AC
+104 - E0002A - store 002A | AC -> 002A
+105 - A0001A - load 001A | 001A -> AC
+106 - E0002C - store 002C | AC -> 002C
+107 - C0002D - jmp 002D | GOTO 002D
+108 - A00003 - load 0003 | 0003 -> AC
+109 - F0006C - jmz 006C | GOTO 006C if Z == 1
+110 - A0001B - load 001B | 001B -> AC
+111 - E0002B - store 002B | AC -> 002B
+112 - A00023 - load 0023 | 0023 -> AC
+113 - E0002A - store 002A | AC -> 002A
+114 - A00024 - load 0024 | 0024 -> AC
+115 - E0002C - store 002C | AC -> 002C
+116 - C0002D - jmp 002D | GOTO 002D
+117 - A00087 - load 0087 | 0087 -> AC
+118 - E0002B - store 002B | AC -> 002B
+119 - A00085 - load 0085 | 0085 -> AC
+120 - E0002A - store 002A | AC -> 002A
+121 - A00084 - load 0084 | 0084 -> AC
+122 - E0002C - store 002C | AC -> 002C
+123 - C0002D - jmp 002D | GOTO 002D
+124 - A00025 - load 0025 | 0025 -> AC
+125 - E0002B - store 002B | AC -> 002B
+126 - A00027 - load 0027 | 0027 -> AC
+127 - E0002A - store 002A | AC -> 002A
+128 - A00028 - load 0028 | 0028 -> AC
+129 - E0002C - store 002C | AC -> 002C
+130 - C0002D - jmp 002D | GOTO 002D
+131 - 010000 - hlt | Stop
+25 - A00002 - load 0002 | 0002 -> AC
+26 - E00010 - store 0010 | AC -> 0010
+27 - A0000F - load 000F | 000F -> AC
+28 - 070000 - inc | AC + 1 -> AC
+29 - E0000F - store 000F | AC -> 000F
+30 - A0000F - load #F | #F -> AC
+31 - E00011 - store #11 | AC -> #11
+32 - A00010 - load 0010 | 0010 -> AC
+33 - 080000 - dec | AC - 1 -> AC
+34 - E00010 - store 0010 | AC -> 0010
+35 - F00025 - jmz 0025 | GOTO 0025 if Z == 1
+36 - C0001B - jmp 001B | GOTO 001B
+37 - 010000 - hlt | Stop
+7 - 0C0000 - push | AC -> -(SP)
+8 - A00005 - load #5 | #5 -> AC
+9 - E00006 - store #6 | AC -> #6
+10 - 0A0000 - pop | (SP)+ -> AC
+11 - 0B0000 - iret | return
+12 - 110000 - ei | Allow interrupt
+13 - A00002 - load 0002 | 0002 -> AC
+14 - 0C0000 - push | AC -> -(SP)
+15 - A00003 - load 0003 | 0003 -> AC
+16 - 0C0000 - push | AC -> -(SP)
+17 - A00004 - load 0004 | 0004 -> AC
+18 - E00006 - store #6 | AC -> #6
+19 - 0A0000 - pop | (SP)+ -> AC
+20 - E00006 - store #6 | AC -> #6
+21 - 0A0000 - pop | (SP)+ -> AC
+22 - E00006 - store #6 | AC -> #6
+23 - 100000 - di | Prohibit interrupt
+24 - 010000 - hlt | Stop
+7 - 020000 - cla | 0 -> AC
+8 - A00002 - load 0002 | 0002 -> AC
+9 - E00003 - store 0003 | AC -> 0003
+10 - 400001 - add 0001 | AC + 0001
+11 - E00002 - store 0002 | AC -> 0002
+12 - 700004 - cmp 0004 | AC - 0004set flags
+13 - F20012 - jmn 0012 | GOTO 0012 if N == 1
+14 - F00012 - jmz 0012 | GOTO 0012 if Z == 1
+15 - A00005 - load 0005 | 0005 -> AC
+16 - E00006 - store #6 | AC -> #6
+17 - 010000 - hlt | Stop
+18 - 060000 - asr | AC[0] -> C, AC * 2 -> AC
+19 - F40017 - jmc 0017 | GOTO 0017 if C == 1
+20 - 050000 - asl | AC[15] -> C, AC / 2 -> AC
+21 - 400005 - add 0005 | AC + 0005
+22 - E00005 - store 0005 | AC -> 0005
+23 - A00003 - load 0003 | 0003 -> AC
+24 - E00001 - store 0001 | AC -> 0001
+25 - C00008 - jmp 0008 | GOTO 0008

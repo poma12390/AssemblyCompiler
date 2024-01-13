@@ -1,0 +1,267 @@
+in_source: |-
+  org 0
+  int_addr: word: interrupt
+  org 2
+  line_end: word: 10          ; end-of-line code
+  stop_input: word: 0         ; flag
+  in: word: 2046
+  out: word: 2047
+
+  org 10
+  start: ei
+      loop: load stop_input   ; spin-loop cycle
+      jmz loop
+      hlt
+
+  interrupt: push             ; save accumulator
+      load (in)               ; read symbol
+      cmp line_end            ; check is it end of string
+      jmnz print              ; print if not end-of-line
+      load stop_input         ; increase flag
+      inc
+      store stop_input
+      jmp end
+      print: store (out)      ; output symbol
+      end: pop                ; restore accumulator
+      iret
+in_stdin: |-
+  [(30, 'h'), (80, 'e'), (130, 'l'),  (150, 'l'), (180, 'o'), (200, '\n')]
+out_code:
+- 10
+- 782
+- 0
+- 778
+- 768
+- 1134
+- 1135
+- 0
+- 0
+- 0
+- 0
+- 69632
+- 655363
+- 983051
+- 4096
+- 49152
+- 655876
+- 458754
+- 987158
+- 655363
+- 28672
+- 917507
+- 786455
+- 918021
+- 40960
+- 45056
+out_stdout:
+out_log: |
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: ei   | AC 0       | IP: 11   | AR: 10   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: ei           | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: load 3       | 
+  INFO    machine:input_instruction INPUT h
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 11010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 0   | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: push | AC 0       | IP: 15   | AR: 2043 | PS: 10010 | DR: 0       | SP : 2042 | mem[AR] 0       | mem[SP] : 0   | CR: push         | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 104     | IP: 16   | AR: 2046 | PS: 10000 | DR: 104     | SP : 2042 | mem[AR] 104     | mem[SP] : 0   | CR: load 4       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: cmp  | AC 104     | IP: 17   | AR: 2    | PS: 10001 | DR: 10      | SP : 2042 | mem[AR] 10      | mem[SP] : 0   | CR: cmp 2        | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmnz | AC 104     | IP: 22   | AR: 22   | PS: 10001 | DR: 0       | SP : 2042 | mem[AR] 0       | mem[SP] : 0   | CR: jmnz 22      | 
+  INFO    machine:sig_write     OUTPUT h
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: store | AC 104     | IP: 23   | AR: 2047 | PS: 10001 | DR: 104     | SP : 2042 | mem[AR] 104     | mem[SP] : 0   | CR: store 5      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: pop  | AC 0       | IP: 24   | AR: 2043 | PS: 10010 | DR: 0       | SP : 2043 | mem[AR] 0       | mem[SP] : 0   | CR: pop          | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:input_instruction INPUT e
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 11010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: push | AC 0       | IP: 15   | AR: 2043 | PS: 10010 | DR: 0       | SP : 2042 | mem[AR] 0       | mem[SP] : 0   | CR: push         | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 101     | IP: 16   | AR: 2046 | PS: 10000 | DR: 101     | SP : 2042 | mem[AR] 101     | mem[SP] : 0   | CR: load 4       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: cmp  | AC 101     | IP: 17   | AR: 2    | PS: 10001 | DR: 10      | SP : 2042 | mem[AR] 10      | mem[SP] : 0   | CR: cmp 2        | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmnz | AC 101     | IP: 22   | AR: 22   | PS: 10001 | DR: 0       | SP : 2042 | mem[AR] 0       | mem[SP] : 0   | CR: jmnz 22      | 
+  INFO    machine:sig_write     OUTPUT e
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: store | AC 101     | IP: 23   | AR: 2047 | PS: 10001 | DR: 101     | SP : 2042 | mem[AR] 101     | mem[SP] : 0   | CR: store 5      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: pop  | AC 0       | IP: 24   | AR: 2043 | PS: 10010 | DR: 0       | SP : 2043 | mem[AR] 0       | mem[SP] : 0   | CR: pop          | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 12   | AR: 3    | PS: 10010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:input_instruction INPUT l
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 0       | IP: 11   | AR: 11   | PS: 11010 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: push | AC 0       | IP: 15   | AR: 2043 | PS: 10010 | DR: 0       | SP : 2042 | mem[AR] 0       | mem[SP] : 0   | CR: push         | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 108     | IP: 16   | AR: 2046 | PS: 10000 | DR: 108     | SP : 2042 | mem[AR] 108     | mem[SP] : 0   | CR: load 4       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: cmp  | AC 108     | IP: 17   | AR: 2    | PS: 10001 | DR: 10      | SP : 2042 | mem[AR] 10      | mem[SP] : 0   | CR: cmp 2        | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmnz | AC 108     | IP: 22   | AR: 22   | PS: 10001 | DR: 0       | SP : 2042 | mem[AR] 0       | mem[SP] : 0   | CR: jmnz 22      | 
+  INFO    machine:input_instruction INPUT l
+  INFO    machine:sig_write     OUTPUT l
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: store | AC 108     | IP: 23   | AR: 2047 | PS: 11001 | DR: 108     | SP : 2042 | mem[AR] 108     | mem[SP] : 0   | CR: store 5      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: push | AC 108     | IP: 15   | AR: 2040 | PS: 10001 | DR: 108     | SP : 2039 | mem[AR] 108     | mem[SP] : 0   | CR: push         | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 108     | IP: 16   | AR: 2046 | PS: 10000 | DR: 108     | SP : 2039 | mem[AR] 108     | mem[SP] : 0   | CR: load 4       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: cmp  | AC 108     | IP: 17   | AR: 2    | PS: 10001 | DR: 10      | SP : 2039 | mem[AR] 10      | mem[SP] : 0   | CR: cmp 2        | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmnz | AC 108     | IP: 22   | AR: 22   | PS: 10001 | DR: 0       | SP : 2039 | mem[AR] 0       | mem[SP] : 0   | CR: jmnz 22      | 
+  INFO    machine:sig_write     OUTPUT l
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: store | AC 108     | IP: 23   | AR: 2047 | PS: 10001 | DR: 108     | SP : 2039 | mem[AR] 108     | mem[SP] : 0   | CR: store 5      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: pop  | AC 108     | IP: 24   | AR: 2040 | PS: 10000 | DR: 108     | SP : 2040 | mem[AR] 108     | mem[SP] : 108 | CR: pop          | 
+  INFO    machine:input_instruction INPUT o
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: push | AC 108     | IP: 15   | AR: 2040 | PS: 10001 | DR: 108     | SP : 2039 | mem[AR] 108     | mem[SP] : 0   | CR: push         | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 111     | IP: 16   | AR: 2046 | PS: 10000 | DR: 111     | SP : 2039 | mem[AR] 111     | mem[SP] : 0   | CR: load 4       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: cmp  | AC 111     | IP: 17   | AR: 2    | PS: 10001 | DR: 10      | SP : 2039 | mem[AR] 10      | mem[SP] : 0   | CR: cmp 2        | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmnz | AC 111     | IP: 22   | AR: 22   | PS: 10001 | DR: 0       | SP : 2039 | mem[AR] 0       | mem[SP] : 0   | CR: jmnz 22      | 
+  INFO    machine:input_instruction INPUT 
+
+  INFO    machine:sig_write     OUTPUT o
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: store | AC 111     | IP: 23   | AR: 2047 | PS: 11001 | DR: 111     | SP : 2039 | mem[AR] 111     | mem[SP] : 0   | CR: store 5      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: push | AC 111     | IP: 15   | AR: 2037 | PS: 10001 | DR: 111     | SP : 2036 | mem[AR] 111     | mem[SP] : 0   | CR: push         | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 10      | IP: 16   | AR: 2046 | PS: 10000 | DR: 10      | SP : 2036 | mem[AR] 10      | mem[SP] : 0   | CR: load 4       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: cmp  | AC 10      | IP: 17   | AR: 2    | PS: 10011 | DR: 10      | SP : 2036 | mem[AR] 10      | mem[SP] : 0   | CR: cmp 2        | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmnz | AC 10      | IP: 18   | AR: 22   | PS: 10011 | DR: 0       | SP : 2036 | mem[AR] 0       | mem[SP] : 0   | CR: jmnz 22      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 0       | IP: 19   | AR: 3    | PS: 10010 | DR: 0       | SP : 2036 | mem[AR] 0       | mem[SP] : 0   | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: inc  | AC 1       | IP: 20   | AR: 19   | PS: 10000 | DR: 0       | SP : 2036 | mem[AR] 0       | mem[SP] : 0   | CR: inc          | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: store | AC 1       | IP: 21   | AR: 3    | PS: 10000 | DR: 1       | SP : 2036 | mem[AR] 1       | mem[SP] : 0   | CR: store 3      | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmp  | AC 1       | IP: 23   | AR: 23   | PS: 10000 | DR: 0       | SP : 2036 | mem[AR] 0       | mem[SP] : 0   | CR: jmp 23       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: pop  | AC 111     | IP: 24   | AR: 2037 | PS: 10000 | DR: 111     | SP : 2037 | mem[AR] 111     | mem[SP] : 111 | CR: pop          | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: pop  | AC 108     | IP: 24   | AR: 2040 | PS: 10000 | DR: 108     | SP : 2040 | mem[AR] 108     | mem[SP] : 108 | CR: pop          | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: pop  | AC 0       | IP: 24   | AR: 2043 | PS: 10010 | DR: 0       | SP : 2043 | mem[AR] 0       | mem[SP] : 0   | CR: pop          | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: load | AC 1       | IP: 12   | AR: 3    | PS: 10000 | DR: 1       | SP : 2045 | mem[AR] 1       | mem[SP] : 18  | CR: load 3       | 
+  INFO    machine:decode_and_execute_instruction 
+
+  INFO    machine:__print__     Command: jmz  | AC 1       | IP: 13   | AR: 11   | PS: 10000 | DR: 0       | SP : 2045 | mem[AR] 0       | mem[SP] : 18  | CR: jmz 11       | 
