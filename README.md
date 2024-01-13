@@ -1,4 +1,4 @@
-# MyavAsm. Транслятор и модель
+# Транслятор и модель
 
 - P33081, Кочнев Роман.
 - `asm | acc | neum | hw | instruction | binary | port | mem | pstr | prob2 | spi`
