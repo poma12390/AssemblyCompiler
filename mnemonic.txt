@@ -89,24 +89,6 @@
 35 - F00025 - jmz 0025 | GOTO 0025 if Z == 1
 36 - C0001B - jmp 001B | GOTO 001B
 37 - 010000 - hlt | Stop
-7 - 0C0000 - push | AC -> -(SP)
-8 - A00005 - load #5 | #5 -> AC
-9 - E00006 - store #6 | AC -> #6
-10 - 0A0000 - pop | (SP)+ -> AC
-11 - 0B0000 - iret | return
-12 - 110000 - ei | Allow interrupt
-13 - A00002 - load 0002 | 0002 -> AC
-14 - 0C0000 - push | AC -> -(SP)
-15 - A00003 - load 0003 | 0003 -> AC
-16 - 0C0000 - push | AC -> -(SP)
-17 - A00004 - load 0004 | 0004 -> AC
-18 - E00006 - store #6 | AC -> #6
-19 - 0A0000 - pop | (SP)+ -> AC
-20 - E00006 - store #6 | AC -> #6
-21 - 0A0000 - pop | (SP)+ -> AC
-22 - E00006 - store #6 | AC -> #6
-23 - 100000 - di | Prohibit interrupt
-24 - 010000 - hlt | Stop
 7 - 020000 - cla | 0 -> AC
 8 - A00002 - load 0002 | 0002 -> AC
 9 - E00003 - store 0003 | AC -> 0003
