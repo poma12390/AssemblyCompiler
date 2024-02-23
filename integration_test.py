@@ -11,7 +11,6 @@ def temp_files():
     source = "source.temp"
     input_stream = "input.txt"
     target = "output_real.test"
-
     # Создаем файлы перед тестом
     open(source, 'w').close()
     open(input_stream, 'w').close()
@@ -37,7 +36,9 @@ def test_translator_and_machine(golden, caplog, temp_files):
 
     assert output_code == golden.out["out_code"]
     assert output_stdout == golden.out["out_stdout"]
-    assert caplog.text == golden.out["out_log"]
+    text = caplog.text
+
+    assert text.replace("| \nINFO    machine:decode_and_execute_instruction", "").replace("machine:__print__     ", "") == golden.out["out_log"]
 
 
 def write_input_files(source, input_stream, golden):

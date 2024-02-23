@@ -263,6 +263,7 @@ class ControlUnit:
             print("Limit exceeded!")
 
     def process_interrupt(self):
+        logger.info("interrupt start")
         self.set_reg("PS", self.get_reg("PS") & ~(1 << 3))
         self.set_reg("DR", self.calc(0, self.get_reg("PS"), "add"))
         self.set_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
@@ -305,6 +306,8 @@ class ControlUnit:
 
         if (self.get_reg("PS") >> 3) & 1 == 1 and (self.get_reg("PS") >> 4) & 1 == 1:
             self.process_interrupt()
+        logger.info("interrupt end")
+
 
     def addrFetch(self):
         self.set_reg("AR", self.calc(0, self.get_reg("DR"), "add"))

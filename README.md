@@ -1,7 +1,7 @@
 # Транслятор и модель
 
 - P33081, Кочнев Роман Дмитриевич.
-- `asm | acc | neum | hw | instruction | binary | port | mem | pstr | prob2 | spi`
+- `asm | acc | neum | hw | instr | binary | trap | mem | pstr | prob2 | spi`
 - Без усложнения
 
 ## Язык программирования
@@ -200,9 +200,9 @@ A0000014
 
 ## Модель процессора
 
-Интерфейс командной строки: `mashine.py <machine_code_file> <input_file>`
+Интерфейс командной строки: `machine.py <machine_code_file> <input_file>`
 
-Реализовано в модуле: [mashine](./machine.py).
+Реализовано в модуле: [machine](./machine.py).
 
 ### DataPath
 
