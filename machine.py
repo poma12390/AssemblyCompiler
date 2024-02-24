@@ -267,7 +267,7 @@ class ControlUnit:
         self.set_reg("PS", self.get_reg("PS") & ~(1 << 3))
         self.set_reg("DR", self.calc(0, self.get_reg("PS"), "add"))
         self.set_reg("AR", self.calc(0, self.get_reg("SP"), "add"))
-        self.tick()  # 0 -> PS[3], IP -> DR, SP -> AR
+        self.tick()  # 0 -> PS[3], PS -> DR, SP -> AR
 
         self.write_output()
         self.tick()  # DR -> mem[SP]
