@@ -1,7 +1,7 @@
 # Транслятор и модель
 
 - P33081, Кочнев Роман Дмитриевич.
-- `asm | acc | neum | hw | instr | binary | trap | mem | pstr | prob2 | spi`
+- `asm|acc|neum|hw|instr|binary|trap|mem|pstr|prob2|spi`
 - Без усложнения
 
 ## Язык программирования
